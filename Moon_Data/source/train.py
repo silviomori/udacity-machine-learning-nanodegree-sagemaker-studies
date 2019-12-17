@@ -113,7 +113,7 @@ def save_model_params(model, model_dir):
         torch.save(model_info, f)
 
 
-## TODO: Complete the main code
+## DONE: Complete the main code
 if __name__ == '__main__':
     # All of the model parameters and training parameters are sent as arguments
     # when this script is executed, during a training job
@@ -131,17 +131,24 @@ if __name__ == '__main__':
     # Training Parameters, given
     parser.add_argument('--batch-size', type=int, default=64, metavar='N',
                         help='input batch size for training (default: 64)')
-    parser.add_argument('--epochs', type=int, default=10, metavar='N',
+    parser.add_argument('--epochs', type=int, default=10, metavar='E',
                         help='number of epochs to train (default: 10)')
     parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                         help='learning rate (default: 0.001)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
-  
-    ## TODO: Add args for the three model parameters: input_dim, hidden_dim, output_dim
-    # Model parameters
 
-    
+    ## DONE: Add args for the three model parameters: input_dim, hidden_dim, output_dim
+    # Model parameters
+    parser.add_argument('--input-dim', type=int, default=2, metavar='IN',
+                        help='number of input features')
+    parser.add_argument('--hidden-dim', type=int, default=64, metavar='H',
+                        help='size of hidden layers')
+    parser.add_argument('--output-dim', type=int, default=1, metavar='OUT',
+                        help='number of outputs')
+    parser.add_argument('--dropout', type=float, default=0.2, metavar='D',
+                        help='number of outputs')
+
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -155,17 +162,19 @@ if __name__ == '__main__':
     train_loader = _get_train_loader(args.batch_size, args.data_dir) # data_dir from above..
     
     
-    ## TODO:  Build the model by passing in the input params
-    # To get params from the parser, call args.argument_name, ex. args.epochs or ards.hidden_dim
+    ## DONE:  Build the model by passing in the input params
+    # To get params from the parser, call args.argument_name, ex. args.epochs or args.hidden_dim
     # Don't forget to move your model .to(device) to move to GPU , if appropriate
-    model = None
-    
+    model = SimpleNet(args.input_dim, args.hidden_dim,
+                      args.output_dim, args.dropout)
+    model.to(device)
+
     # Given: save the parameters used to construct the model
     save_model_params(model, args.model_dir)
 
-    ## TODO: Define an optimizer and loss function for training
-    optimizer = None
-    criterion = None
+    ## DONE: Define an optimizer and loss function for training
+    optimizer = optim.Adam(model.parameters(), lr=args.lr)
+    criterion = nn.BCELoss()
 
     
     # Trains the model (given line of code, which calls the above training function)
