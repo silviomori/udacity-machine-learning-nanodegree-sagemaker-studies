@@ -147,7 +147,7 @@ if __name__ == '__main__':
     parser.add_argument('--output-dim', type=int, default=1, metavar='OUT',
                         help='number of outputs')
     parser.add_argument('--dropout', type=float, default=0.2, metavar='D',
-                        help='number of outputs')
+                        help='probability of an element to be zeroed')
 
     args = parser.parse_args()
 
